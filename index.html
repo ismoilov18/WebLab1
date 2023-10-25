@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <title>Shahzod</title>
+    <link rel="stylesheet" href="css/index.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+</head>
+<body>
+<nav>
+    <img src="https://itmo.ru/promo/itmo-logo-dark.svg">
+    <p class="author">Исмоилов Шахзод | Группа: P3213 | Вариант: 2305 </p>
+</nav>
+
+
+<content>
+    <main>
+        <div id = "bodyA">
+            <div id="graff">
+                <svg height="300" width="300" xmlns="http://www.w3.org/2000/svg">
+                    <!--                Оси-->
+                    <line stroke="black" x1="150" x2="150" y1="300" y2="0"></line>
+                    <text x="160" y="12">Y</text>
+                    <line stroke="black" x1="0" x2="300" y1="150" y2="150"></line>
+                    <text x="286" y="135">X</text>
+                    <!--                Промежутки-->
+                    <line stroke="black" x1="147" x2="153" y1="30" y2="30"></line>
+                    <text x="160" y="35">R</text>
+                    <line stroke="black" x1="147" x2="153" y1="90" y2="90"></line>
+                    <text x="160" y="95">R/2</text>
+                    <line stroke="black" x1="147" x2="153" y1="210" y2="210"></line>
+                    <text x="160" y="215">-R/2</text>
+                    <line stroke="black" x1="147" x2="153" y1="270" y2="270"></line>
+                    <text x="160" y="275">-R</text>
+                    <line stroke="black" x1="30" x2="30" y1="147" y2="153"></line>
+                    <text x="23" y="140">-R</text>
+                    <line stroke="black" x1="90" x2="90" y1="147" y2="153"></line>
+                    <text x="83" y="140">-R/2</text>
+                    <line stroke="black" x1="210" x2="210" y1="147" y2="153"></line>
+                    <text x="202" y="140">R/2</text>
+                    <line stroke="black" x1="270" x2="270" y1="147" y2="153"></line>
+                    <text x="264" y="140">R</text>
+                    <!--                Стрелочки-->
+                    <line stroke="black" x1="300" x2="290" y1="150" y2="146"></line>
+                    <line stroke="black" x1="300" x2="290" y1="150" y2="154"></line>
+                    <line stroke="black" x1="150" x2="146" y1="0" y2="10"></line>
+                    <line stroke="black" x1="150" x2="154" y1="0" y2="10"></line>
+                    <circle id = "point" cx="150" cy="150" r="3" fill="black"></circle>
+                    <!--                Выделенная область-->
+                    <polygon fill="red" fill-opacity="0.3" points="210 150, 150 150, 150 30"></polygon>
+                    <polygon fill="green" fill-opacity="0.3" points=" 30 30, 30 150, 150 150, 150 30"></polygon>
+                    <path fill="rebeccapurple" fill-opacity="0.3" d="M150,150 L30,150 A120,120 0 0,0 150,270"></path>
+                </svg>
+            </div>
+        </div>
+        <form id="myForm">
+            <!-- Значения X -->
+            <div class = "form-div">
+                <label class = "form-label">Значения X:</label>
+                <label>
+                    <input class="asd" type="text" name = "x" maxlength="6" placeholder="-5 . . . . .5">
+                </label>
+            </div>
+
+            <!-- Значения Y -->
+          <div class="box">
+                <label class = "form-label">Значения Y:</label>
+              <label>
+                  <select name="y">
+                      <option value="-2" selected>-2</option>
+                      <option value="-1.5">-1.5</option>
+                      <option value="-1">-1</option>
+                      <option value="-0.5">-0.5</option>
+                      <option value="0">0</option>
+                      <option value="0.5">0.5</option>
+                      <option value="1">1</option>
+                      <option value="1.5">1.5</option>
+                      <option value="2">2</option>
+                  </select>
+              </label>
+          </div>
+
+
+
+            <div class="box">
+                <label class = "form-label">Значения R:</label>
+                <label>
+                    <select name="r">
+                        <option value="1" selected>1</option>
+                        <option value="1.5" >1.5</option>
+                        <option value="2">2</option>
+                        <option value="2.5">2.5</option>
+                        <option value="3">3</option>
+                    </select>
+                </label>
+            </div>
+
+
+            <span class="check">Проверить</span>
+
+        </form>
+    </main>
+
+    <section>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>X</th>
+                <th>Y</th>
+                <th>R</th>
+                <th>Факт</th>
+                <th>Время заспроса</th>
+                <th>Время выполонения</th>
+            </tr>
+        </table>
+        <button class="reset-data">Очистить таблицу</button>
+    </section>
+
+</content>
+
+    <script type="text/javascript">
+                $( document ).ready(function() {
+                    $.ajax({
+                        type: "POST",
+                        url: "server.php",
+                        data: {
+                            req: "get_data"
+                        },
+                        success: function (data){
+                            if(data){
+                                var js = JSON.parse(data);
+                                $("table").append(js);
+                            }
+                        },
+                        dataType: "html"
+                    });
+                });
+
+
+
+
+                $("input[type=text]").on("input", function(){
+                    var val = $(this).val();
+                    if(!((val >= -5 && val <= 5) || val == '-')) {
+                        alert("Значения X должно быть от -5 до 5 а не " + val + " !");
+                        $(this).val("");
+                    }
+                });
+
+                $("form .check").on("click", function(){
+                         x = $("form input[name=x]").val();
+                    var y = $("form select[name = y]").val();
+                    var r = $("form select[name = r]").val();
+                    if(x && y.length > 0 && r.length > 0) {
+                        $.ajax({
+                             type: "POST",
+                             url: "server.php",
+                             data:{
+                                 req: "set_data",
+                                 x: x,
+                                 y: y,
+                                 r: r
+                             },
+                             success: function (data) {
+                                 if(data){
+                                     console.log(data);
+                                     var js = JSON.parse(data);
+                                     $("table").append(js);
+                                     const point = document.getElementById('point');
+                                     point.setAttribute("cx", 150 + ((120/r) * x));
+                                     point.setAttribute("cy", 150 - ((120/r) * y));
+
+                                 }
+                             },
+                             dataType: "html"
+                         });
+                     }
+                     else {
+                         alert("Вводите X, Y, R !!!")
+                     }
+                 });
+
+
+
+            $(".reset-data").on("click", function(){
+                $.ajax({
+                    type: "POST",
+                    url: "server.php",
+                    data: {
+                        req: "reset_data"
+                    },
+                    success: function (){
+                        $("tr.data").remove();
+                    },
+                    dataType: "html"
+                });
+            });
+
+    </script>
+</body>
+</html>
